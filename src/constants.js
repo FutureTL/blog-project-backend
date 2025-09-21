@@ -1,0 +1,1 @@
+export const Mongodb_name = "Blogs";
