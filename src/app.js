@@ -7,7 +7,7 @@ const app = express()
 
 //mostly with middlewares or configurations, we use app.use()
 app.use(cors({
-    origin: "https://68cfc475dd8168aa1f9dbd78--papaya-dusk-73e90e.netlify.app",
+    origin: "https://68cfce78c3d132d1987e1d42--papaya-dusk-73e90e.netlify.app",
     credentials:true
 }))
 
