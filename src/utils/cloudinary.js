@@ -2,7 +2,6 @@
 //stored to our local storage. Now we will take it and upload to cloudinary.
 import dotenv from "dotenv";
 import {v2 as cloudinary } from "cloudinary";
-import { upload } from "../middleware/multer.middleware.js";
 
 dotenv.config({
     path: './env'

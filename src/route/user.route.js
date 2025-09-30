@@ -1,4 +1,4 @@
-import {loginUser, registerUser, getPersonalBlogs, getTechBlogs, getParticularWriterDetails, getAllwriters, publishBlogs, displayBlog, getCurrentUser} from "../controller/user.controller.js";
+import {loginUser, registerUser, getPersonalBlogs, getTechBlogs, getParticularWriterDetails, getAllwriters, publishBlogs, displayBlog, getCurrentUser, ImageUploadToCloudinary} from "../controller/user.controller.js";
 import express from "express"
 import { upload } from "../middleware/multer.middleware.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
@@ -30,9 +30,17 @@ router.route("/our-writers").get(getAllwriters);
 
 router.route("/our-writers/:username").get(getParticularWriterDetails);
 
-router.route("/:username/new-blog").post(publishBlogs)
+router.route("/:username/new-blog").post(
+    
+    publishBlogs)
 
 router.route("/:author/:title/:id").get(displayBlog)
+
+router.route("/uploadImage").post(
+    
+    upload.fields([{ name: 'file', maxCount: 1 }]),
+    
+    ImageUploadToCloudinary)
 
 
 export default router;

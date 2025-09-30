@@ -14,7 +14,10 @@ const personBlogSchema = new mongoose.Schema({
     content:{
         type:String,
         required:true
-    }
+    },
+    // blogImage:{
+    //     type:String
+    // }
 
 },{timestamps:true})
 

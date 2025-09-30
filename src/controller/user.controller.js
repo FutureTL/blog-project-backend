@@ -306,6 +306,7 @@ const publishBlogs = asyncHandler( async(req, res, next)=>{
   console.log(`username fetched from the url: ${username}`);
   
   const {title, content} = req.body;
+  
 
   if(!title){
     throw new ApiError(409, "title is required for publishing the blog!")
@@ -314,6 +315,21 @@ const publishBlogs = asyncHandler( async(req, res, next)=>{
   if(!content){
     throw new ApiError(409, "content is required for publishing the blog!")
   }
+
+  //user may also have uploaded an image.
+  // const blogImagePath = req.file?.blogImage[0]?.path;
+  // if(!blogImagePath){
+  //   console.log("error in fetching path of blogImage")
+  // }
+  
+
+
+  // const blogImage = await uploadToCloudinary(blogImagePath);
+  
+  // if(!blogImage){
+
+  //   throw new ApiError(404, "blog image could not be uploaded to cloudinary");
+  // }
 
   const user = await User.findOne({username: username});
 
@@ -325,8 +341,9 @@ const publishBlogs = asyncHandler( async(req, res, next)=>{
       const newBlog = await personalBlog.create({
             title: title,
             content : content,
-            author : user._id //before I was getting an error for - cast to objectId failed for value because 
+            author : user._id ,//before I was getting an error for - cast to objectId failed for value because 
             //I was passing user instead of user._id
+            // blogImage : blogImage? blogImage : null
       })
 
       console.log(`the new blog entry in personalBlogs id : ${newBlog}`)
@@ -361,6 +378,8 @@ const publishBlogs = asyncHandler( async(req, res, next)=>{
 const displayBlog = asyncHandler(async(req, res, next)=>{
 
     //frontend has blog information. - id, author_id, title, content
+    console.log(`entered controller to display blog`);
+    
     const {author,title, id} = req.params;
 
     if(!id){
@@ -396,6 +415,35 @@ const displayBlog = asyncHandler(async(req, res, next)=>{
 
 })
 
+const ImageUploadToCloudinary = asyncHandler(async(req, res, next)=>{
+
+    const imagePath = req.files?.file[0].path;
+
+    if(!imagePath){
+      throw new ApiError(404, "image path not received", imagePath);
+    }
+    console.log(`image path from multer :: ${imagePath}`);
+
+    const image = await uploadToCloudinary(imagePath);
+
+    if(!image){
+      throw new ApiError(404, "image not uploaded to cloudinary", image);
+    }
+
+    console.log(`image was uploaded to cloudinary :: ${image}`);
+    
+
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(200,
+        image,
+        "URL of image from cloudinary sent successfully"
+      )
+    )
+    
+
+})
 
 export {
   registerUser,
@@ -406,5 +454,6 @@ export {
   getAllwriters,
   getParticularWriterDetails,
   publishBlogs,
-  displayBlog
+  displayBlog,
+  ImageUploadToCloudinary
 }
