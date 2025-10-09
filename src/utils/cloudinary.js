@@ -33,6 +33,11 @@ try {
       use_filename: true,
       resource_type: "auto"
     })
+
+
+
+
+    
     console.log("file uploaded successfully to cloudinary: ", response);
     return response;
 

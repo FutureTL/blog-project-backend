@@ -210,7 +210,7 @@ const getPersonalBlogs = asyncHandler(async(req, res, next)=>{
     //latest appearing first.
 
     //logic: we will get all the personal blogs published- latest first:
-  const allPersonalBlogs =  await personalBlog.find({}).sort({"createdAt":-1}).populate("author", "-password -refreshToken");
+  const allPersonalBlogs =  await personalBlog.find({}).sort({"createdAt":-1}).populate("author createdAt", "-password -refreshToken");
 
   //we are using populate here that will populate the author details instead of just showing its id.
   

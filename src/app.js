@@ -1,39 +1,35 @@
-import express from "express";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-
-const app = express()
+import dotenv from "dotenv"
+import { mongodbConnect } from "./db/connect.js" 
+import { application } from  "./application.js";
 
 
-//mostly with middlewares or configurations, we use app.use()
-app.use(cors({
-     origin: ["http://localhost:5173", "https://your-netlify-site.netlify.app"],
-    credentials: true
-}))
 
-app.use(express.json({
-    limit:"16kb"
-}))
-//for receiving json data
-
-app.use(express.urlencoded({
-    limit:"20kb",
-    extended:true
-}))
-//for receiving url data
-
-app.use(express.static("public"))
-//if there are any files they will get saved in this location.
-
-app.use(cookieParser())  //use: so that we can access the cookies from the browser of the user.
-                         //basically so that we can perform crud operations on the cookies of the user.
+import { personalBlog } from "./model/personal_blog.model.js";
+import mongoose from "mongoose";
+import { User } from "./model/user.model.js";
+import { ApiError } from "./utils/ApiError.js";
 
 
-//we will import our routes here and using a middleware implement them:
-import UserRoutes from "./route/user.route.js";
+dotenv.config({
+    path: './env'
+})
 
-app.use("/api/v1/user", UserRoutes); //interacting with routes treating them as a 
-                                      //middleware.
+const CurrentPort = process.env.PORT || 8000
 
 
-export { app };
+mongodbConnect()
+.then(()=>{
+    const server = application.listen(CurrentPort,()=>{
+        console.log("application running on port: ", CurrentPort)
+    })
+
+    server.on("error", (error)=>{
+        console.log("problem in connecting to the server: ", error)
+    })
+
+})
+.catch((error)=>{
+    console.log("database connection has failed: ", error)
+})
+
+
